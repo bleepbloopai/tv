@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Free Live TV</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&display=swap">
+<style>
+:root{--bg:#eef1f5;--panel:#fff;--text:#14202f;--muted:#5d6b7d;--line:#d6dce4;--acc:#a85800;--accbg:#fff1dc;--screen:#05080d;color-scheme:light;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1726;--panel:#15233a;--text:#eaf0f7;--muted:#8fa0b8;--line:#243752;--acc:#ffb020;--accbg:#2a2a1f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1726;--panel:#15233a;--text:#eaf0f7;--muted:#8fa0b8;--line:#243752;--acc:#ffb020;--accbg:#2a2a1f;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.4 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1040px;margin:0 auto;padding:12px}
+header{display:flex;align-items:center;justify-content:space-between;padding:4px 2px 10px}
+h1{margin:0;font:700 24px "Barlow Semi Condensed",system-ui,sans-serif;letter-spacing:.2px}
+#theme{background:none;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;cursor:pointer}
+.grid{display:grid;gap:12px}
+@media(min-width:820px){.grid{grid-template-columns:1fr 320px;align-items:start}}
+.set{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+#stage{aspect-ratio:16/9;background:var(--screen);position:relative;display:grid;place-items:center;color:#9fb0c6;text-align:center}
+#stage iframe,#stage video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+.osd{display:flex;align-items:center;gap:12px;padding:10px 12px;border-top:1px solid var(--line)}
+#num{font:700 34px/1 "Barlow Semi Condensed",system-ui,sans-serif;color:var(--acc);min-width:64px}
+#meta{flex:1;min-width:0}
+#name{font-weight:700;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sub{color:var(--muted);font-size:14px}
+.btns{display:flex;gap:6px}
+button{font:inherit;cursor:pointer}
+.btns button{width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:18px}
+.btns button:active{background:var(--accbg)}
+.links{padding:0 12px 10px;font-size:14px;color:var(--muted)}
+a{color:var(--acc)}
+.custom{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
+.custom input{flex:1;min-width:0;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit}
+.custom button{padding:0 14px;border-radius:8px;border:1px solid var(--acc);background:var(--accbg);color:var(--text)}
+.hint{padding:0 12px 12px;font-size:13px;color:var(--muted)}
+.guide{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.chips{display:flex;gap:6px;padding:10px;overflow-x:auto;border-bottom:1px solid var(--line)}
+.chip{white-space:nowrap;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--accbg);border-color:var(--acc);color:var(--text)}
+#list{max-height:420px;overflow-y:auto}
+.row{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--text);text-align:left}
+.row[aria-current="true"]{background:var(--accbg)}
+.row .n{font:700 18px "Barlow Semi Condensed",system-ui,sans-serif;color:var(--acc);width:30px}
+.row .t{flex:1;min-width:0}.row .t small{display:block;color:var(--muted)}
+.star{padding:6px;color:var(--muted);font-size:18px;background:none;border:0}
+.star.on{color:var(--acc)}
+.empty{padding:16px;color:var(--muted)}
+.blocked{padding:20px;display:grid;gap:12px;justify-items:center}
+.blocked p{margin:0;max-width:34ch}
+.watch{display:inline-block;padding:12px 18px;border-radius:10px;background:var(--acc);color:#fff;font-weight:700;text-decoration:none}
+:root[data-theme="dark"] .watch{color:#14202f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .watch{color:#14202f}}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+html:root:root:root{--bg:#000;--panel:#12121a;--text:#fff;--muted:#a4a4b8;--line:#262633;--acc:#9a6bff;--accbg:#1d1b2e;--screen:#000;color-scheme:dark}
+body{font-family:Montserrat,system-ui,-apple-system,'Segoe UI',sans-serif;background:radial-gradient(900px 360px at 50% -120px,#33197a 0%,transparent 70%),#000;background-repeat:no-repeat}
+#theme{display:none}
+header{padding:8px 2px 14px;gap:10px;justify-content:flex-start}
+.mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#5b3df5,#b86bff)}
+h1{font-family:inherit;font-weight:800;font-size:22px;letter-spacing:-.3px;text-transform:lowercase}
+.set,.guide{border:0;background:var(--panel);border-radius:16px}
+#stage{border-radius:16px 16px 0 0}
+.osd{border-top:0}
+#num{font-family:inherit;font-weight:800;font-size:20px;min-width:0;padding:8px 12px;border-radius:10px;background:linear-gradient(135deg,#5b3df5,#a05cff);color:#fff}
+#name{font-weight:800}
+.btns button{border-radius:50%;background:#1d1d29;border:0;color:#fff}
+.custom{border-top:1px solid var(--line)}
+.custom button,.watch.watch.watch{background:linear-gradient(90deg,#5b3df5,#a05cff);color:#fff;border:0;font-weight:700}
+.chips{gap:18px;padding:12px 14px}
+.chip{border:0;border-radius:0;padding:4px 0;font-weight:700;border-bottom:3px solid transparent;color:var(--muted);background:none}
+.chip[aria-pressed='true']{background:none;color:#fff;border-bottom-color:#9a6bff}
+.row{padding:10px 12px;gap:12px;border-left:4px solid transparent}
+.row[aria-current='true']{background:#1d1b2e;border-left-color:#9a6bff}
+.row .n{font-family:inherit;color:var(--muted);font-weight:700;font-size:14px;width:24px}
+.logo{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff;flex:none}
+.row .t{font-weight:700;font-size:15px}
+.row .t small{font-weight:500;font-size:12px}
+#q{background:#1a1a26!important;border-radius:12px!important;margin:10px 12px;width:calc(100% - 24px)!important;border:0!important}
+@media(min-width:820px){.grid{grid-template-columns:1fr 380px}#list{max-height:560px}}
+#stage:fullscreen{aspect-ratio:auto;border-radius:0}
+.pfs{position:fixed!important;inset:0;z-index:99;aspect-ratio:auto!important;border-radius:0!important}
+#fsx{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);right:10px;z-index:100;padding:10px 14px;border-radius:999px;border:0;background:rgba(20,20,30,.85);color:#fff;font-weight:700}
+#fsx[hidden]{display:none}
+</style>
+</head>
+<body>
+<main>
+<header><div class="mark"></div><h1>Free Live TV</h1><button id="theme" aria-label="Toggle theme">Theme</button></header>
+<div class="grid">
+<section class="set">
+<div id="stage"><p>Pick a channel to start watching.</p></div>
+<div class="osd">
+<div id="num">--</div>
+<div id="meta"><div id="name">No channel</div><div id="sub">Choose from the guide</div></div>
+<div class="btns"><button id="down" aria-label="Previous channel">&#9660;</button><button id="up" aria-label="Next channel">&#9650;</button><button id="fs" aria-label="Full screen"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div>
+</div>
+<div class="links" id="links"></div>
+<div class="custom"><input id="url" placeholder="Paste a .m3u8 or YouTube link" aria-label="Custom stream link"><button id="go">Play</button></div>
+<div class="hint">Streams are official free feeds from broadcasters. If one won't play, it may be offline or blocked here, so use the open link above.</div>
+</section>
+<aside class="guide">
+<input id="q" placeholder="Search channels" aria-label="Search channels" style="width:100%;padding:10px 12px;border:0;border-bottom:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit">
+<div class="chips" id="chips"></div>
+<div id="list"></div>
+</aside>
+</div>
+</main>
+<button id="fsx" hidden>Exit full screen</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js"></script>
+<script>
+var CH=[
+{n:"Al Jazeera English",c:"News",id:"UCNye-wNBqNL5ZzHSJj3l8Bg",d:"Global news from Doha"},
+{n:"DW News",c:"News",id:"UCknLrEdhRCp1aegoMqRaCZg",d:"German public broadcaster"},
+{n:"France 24 English",c:"News",id:"UCQfwfsi5VrQ8yKZ-UWmAEFg",d:"International news from Paris"},
+{n:"Sky News",c:"News",id:"UCoMdktPbSTixAyNGwb-UYkQ",d:"UK breaking news"},
+{n:"euronews",c:"News",id:"UCSrZ3UV4jOidv8ppoVuvW9Q",d:"European news"},
+{n:"ABC News Australia",c:"News",id:"UCVgO39Bk5sMo66-6o6Spn6Q",d:"Australian public broadcaster"},
+{n:"Bloomberg Television",c:"Business",id:"UCIALMKvObZNtJ6AmdCLP7Lg",d:"Business and markets"},
+{n:"Yahoo Finance",c:"Business",id:"UCEAZeUIeJs0IjQiqTCdVSIg",d:"Markets and money news"},
+{n:"CNA",c:"News",id:"UC83jt4dlz1Gjl58fzQrrKZg",d:"Channel NewsAsia, Singapore"},
+{n:"WION",c:"News",id:"UC_gUM8rL-Lrg6O3adPW9K1g",d:"World news from India"},
+{n:"CGTN",c:"News",id:"UCgrNz-aDmcr2uuto8_DL2jg",d:"English news from China"},
+{n:"TRT World",c:"News",id:"UC7fWeaHhqgM4Ry-RMpM2YYw",d:"News from Turkey"},
+{n:"ABC News Live",c:"News",id:"UCBi2mrWuNuyYy4gbM6fU18Q",d:"US news"},
+{n:"CBS News",c:"News",id:"UC8p1vwvWtl6T73JiExfWs1g",d:"US news"},
+{n:"NBC News",c:"News",id:"UCeY0bbntWzzVIaj2z3QigXg",d:"US news"},
+{n:"LiveNOW from FOX",c:"News",id:"UCJg9wBPyKMNA5sRDnvzmkdg",d:"US breaking news"},
+{n:"Associated Press",c:"News",id:"UC52X5wxOL_s5yw0dQk7NtgA",d:"Wire service live coverage"},
+{n:"Reuters",c:"News",id:"UChqUTb7kYRX8-EiaN3XFrSQ",d:"Global wire service"},
+{n:"NASA",c:"Science",id:"UCLA_DiR1FfKNvjuUpBHmylQ",d:"Space and launches"},
+{n:"Lofi Girl",c:"Music",id:"UCSJ4gkVC6NrvII8umztf0Ow",d:"Lo-fi beats to relax to"},
+{n:"Chillhop Music",c:"Music",id:"UCOxqgTdfRcxy1aLSpn2VTRw",d:"Chill beats radio"},
+{n:"Monstercat",c:"Music",id:"UCJ6td3C9QlPO9O_J5dF4ZzA",d:"Electronic music"},
+{n:"NoCopyrightSounds",c:"Music",id:"UC_aEa8K-EOJ3D6gOs7HcyNg",d:"Electronic and bass"},
+{n:"Trap Nation",c:"Music",id:"UCa10nxShhzNrCE1o2ZOPztg",d:"Trap and bass"},
+{n:"SpaceX",c:"Science",id:"UCtI0Hodo5o5dUb67FeUjDeA",d:"Launch webcasts"},
+{n:"BBC News",c:"News",id:"UC16niRr50-MSBwiO3YDb3RA",d:"UK public broadcaster"},
+{n:"GB News",c:"News",id:"UC0vn8ISa4LKMunLbzaXLnOQ",d:"UK news and opinion"},
+{n:"Channel 4 News",c:"News",id:"UCTrQ7HXWRRxr7OsOtodr2_w",d:"UK news"},
+{n:"PBS NewsHour",c:"News",id:"UC6ZFN9Tx6xh-skXCuRHCDpQ",d:"US public broadcaster"},
+{n:"C-SPAN",c:"News",id:"UCb--64Gl51jIEVE-GLDAVTg",d:"US government proceedings"},
+{n:"i24NEWS English",c:"News",id:"UCvHDpsWKADrDia0c99X37vg",d:"News from Israel"},
+{n:"Africanews",c:"Africa",id:"UC1_E8NeF5QHY2dtdLRBCCLA",d:"News from across Africa"},
+{n:"Channels TV",c:"Africa",id:"UCEXGDNclvmg6RW0vipJYsTQ",d:"Nigeria"},
+{n:"ARY News",c:"Asia",id:"UCMmpLL2ucRHAXbNHiCPyIyg",d:"Pakistan, Urdu"},
+{n:"Kompas TV",c:"Asia",id:"UC5BMIWZe9isJXLZZWPWvBlg",d:"Indonesia"},
+{n:"NDTV 24x7",c:"India",id:"UCZFMm1mMw0F81Z37aaEzTUA",d:"English news"},
+{n:"India Today",c:"India",id:"UCYPvAwZP8pZhSMW8qs7cVCw",d:"English news"},
+{n:"Aaj Tak",c:"India",id:"UCt4t-jeY85JegMlZ-E5UWtA",d:"Hindi news"},
+{n:"ABP News",c:"India",id:"UCRWFSbif-RFENbBrSiez1DA",d:"Hindi news"},
+{n:"Zee News",c:"India",id:"UCIvaYmXn910QMdemBG3v1pQ",d:"Hindi news"},
+{n:"Times Now",c:"India",id:"UC6RJ7-PaXg6TIH2BzZfTV7w",d:"English news"},
+{n:"France 24 Français",c:"Français",id:"UCCCPCZNChQdGa9EkATeye4g",d:"Actualités en direct"},
+{n:"France 24 Español",c:"Español",id:"UCUdOoVWuWmgo1wByzcsyKPw",d:"Noticias en vivo"}
+];
+var $=function(s){return document.querySelector(s)};
+var cur=-1,filter="All",favs=[];
+try{favs=JSON.parse(localStorage.getItem("favs")||"[]")}catch(e){}
+function saveFavs(){try{localStorage.setItem("favs",JSON.stringify(favs))}catch(e){}}
+function pad(i){return String(i+1).padStart(2,"0")}
+function vis(){var out=[],q=$("#q").value.trim().toLowerCase();CH.forEach(function(c,i){if(q&&(c.n+" "+c.d+" "+c.c).toLowerCase().indexOf(q)<0)return;if(q||filter==="All"||(filter==="Favorites"?favs.indexOf(c.id)>-1:c.c===filter))out.push(i)});return out}
+function chips(){var cats=["All","Favorites"];CH.forEach(function(c){if(cats.indexOf(c.c)<0)cats.push(c.c)});
+$("#chips").innerHTML=cats.map(function(c){return '<button class="chip" aria-pressed="'+(c===filter)+'" data-f="'+c+'">'+c+'</button>'}).join("")}
+function list(){var v=vis();
+$("#list").innerHTML=v.length?v.map(function(i){var c=CH[i],on=favs.indexOf(c.id)>-1;
+return '<div style="display:flex;align-items:center;border-bottom:1px solid var(--line)"><button class="row" style="border:0" data-i="'+i+'"'+(i===cur?' aria-current="true"':'')+'><span class="n">'+pad(i)+'</span><span class="logo" style="background:hsl('+hue(c.n)+',45%,32%)">'+ini(c.n)+'</span><span class="t">'+c.n+'<small>'+c.d+'</small></span></button><button class="star'+(on?' on':'')+'" data-s="'+i+'" aria-label="Favorite '+c.n+'">'+(on?'&#9733;':'&#9734;')+'</button></div>'}).join(""):'<div class="empty">No channels here yet. Tap the star on a channel to save it.</div>'}
+function play(i){cur=i;var c=CH[i];
+$("#stage").innerHTML='<iframe src="https://www.youtube.com/embed/live_stream?channel='+c.id+'&autoplay=1&mute=1&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="'+c.n+'"></iframe>';
+$("#num").textContent=pad(i);$("#name").textContent=c.n;$("#sub").textContent=c.c+" - "+c.d;
+$("#links").innerHTML='Not playing? <a target="_blank" rel="noopener" href="https://www.youtube.com/channel/'+c.id+'/live">Open '+c.n+' live in a new tab</a>';
+list()}
+function step(d){var v=vis();if(!v.length)return;var p=v.indexOf(cur);var n=p<0?(d>0?0:v.length-1):(p+d+v.length)%v.length;play(v[n])}
+function custom(){var u=$("#url").value.trim();if(!u)return;var st=$("#stage");cur=-1;
+$("#num").textContent="--";$("#name").textContent="Custom stream";$("#sub").textContent=u.slice(0,60);$("#links").innerHTML="";
+var yt=u.match(/(?:youtu\.be\/|v=|\/live\/)([\w-]{11})/);
+if(yt){st.innerHTML='<iframe src="https://www.youtube.com/embed/'+yt[1]+'?autoplay=1&mute=1&playsinline=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>'}
+else if(/\.m3u8/i.test(u)){st.innerHTML='<video controls autoplay muted playsinline></video>';var v=st.querySelector("video");
+ if(window.Hls&&Hls.isSupported()){var h=new Hls();h.loadSource(u);h.attachMedia(v);h.on(Hls.Events.ERROR,function(e,x){if(x.fatal)st.innerHTML='<p>This stream could not load. It may be offline, or the host blocks other sites.</p>'})}
+ else if(v.canPlayType("application/vnd.apple.mpegurl")){v.src=u}
+ else st.innerHTML='<p>This browser cannot play HLS streams.</p>'}
+else{st.innerHTML='<p>Paste a .m3u8 stream or a YouTube link.</p>'}
+list()}
+$("#chips").addEventListener("click",function(e){var f=e.target.getAttribute("data-f");if(f){filter=f;chips();list()}});
+$("#list").addEventListener("click",function(e){var s=e.target.closest("[data-s]");if(s){var id=CH[+s.getAttribute("data-s")].id,p=favs.indexOf(id);p>-1?favs.splice(p,1):favs.push(id);saveFavs();list();return}
+var r=e.target.closest("[data-i]");if(r)play(+r.getAttribute("data-i"))});
+$("#up").onclick=function(){step(1)};$("#down").onclick=function(){step(-1)};$("#go").onclick=custom;
+$("#url").addEventListener("keydown",function(e){if(e.key==="Enter")custom()});
+document.addEventListener("keydown",function(e){if(e.target.tagName==="INPUT")return;if(e.key==="ArrowUp")step(1);if(e.key==="ArrowDown")step(-1)});
+$("#theme").onclick=function(){var r=document.documentElement,dark=r.getAttribute("data-theme")?r.getAttribute("data-theme")==="dark":matchMedia("(prefers-color-scheme: dark)").matches;r.setAttribute("data-theme",dark?"light":"dark")};
+document.addEventListener("securitypolicyviolation",function(e){
+if(!/youtube/.test(e.blockedURI))return;
+var c=CH[cur],href=c?"https://www.youtube.com/channel/"+c.id+"/live":$("#url").value.trim();
+$("#stage").innerHTML='<div class="blocked"><p>This site blocks embedded players here. Watch it on YouTube instead, or host this file yourself for in-page playback.</p><a class="watch" target="_blank" rel="noopener" href="'+href+'">Watch '+(c?c.n:'stream')+' live</a></div>';
+$("#links").innerHTML=""});
+var st=$("#stage"),fsx=$("#fsx");
+function pseudo(on){st.classList.toggle("pfs",on);fsx.hidden=!on}
+function toggleFs(){
+if(document.fullscreenElement||document.webkitFullscreenElement){(document.exitFullscreen||document.webkitExitFullscreen).call(document);return}
+if(st.classList.contains("pfs")){pseudo(false);return}
+var rq=st.requestFullscreen||st.webkitRequestFullscreen;
+if(rq){try{var p=rq.call(st);if(p&&p.catch)p.catch(function(){pseudo(true)})}catch(e){pseudo(true)}}else pseudo(true)}
+$("#fs").onclick=toggleFs;fsx.onclick=toggleFs;
+document.addEventListener("keydown",function(e){if(e.target.tagName==="INPUT")return;if(e.key==="f")toggleFs();if(e.key==="Escape"&&st.classList.contains("pfs"))pseudo(false)});
+function ini(n){return n.split(/\s+/).map(function(w){return w.charAt(0)}).join("").slice(0,3).toUpperCase()}
+function hue(n){var h=0;for(var k=0;k<n.length;k++)h=(h*31+n.charCodeAt(k))%360;return h}
+$("#q").addEventListener("input",list);
+chips();list();
+</script>
+</body>
+</html>
